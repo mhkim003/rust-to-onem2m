@@ -17,10 +17,11 @@ pub async fn register_subscription(
     let mut store = sub_store.lock().map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("❌ Subscription store lock failed: {e:?}")).into_response())?;
     let entry = store.entry((ae_id.clone(), cnt_id.clone())).or_default();
 
-    if entry.iter().any(|s| s.rn -- payload.rn) {
+    if entry.iter().any(|s| s.rn == payload.rn) {
         return Ok((StatusCode::CONFLICT, "❌ Subscription already exists").into_response());
     }
-
+    println!("📩 Subscription 요청 수신: ae_id = {}, cnt_id = {}", ae_id, cnt_id);
+    println!("📦 요청 payload: {:?}", payload);
     entry.push(payload.clone());
     Ok((StatusCode::CREATED, format!("🔔 Subscription '{}' registered under {ae_id}/{cnt_id}", payload.rn)).into_response())
 }

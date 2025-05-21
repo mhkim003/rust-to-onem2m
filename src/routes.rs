@@ -3,6 +3,7 @@ use crate::handlers::{
     ae::{discover_ae, register_ae},
     container::{get_containers, register_container},
     content_instance::{register_cin, get_latest_cin},
+    subscription::register_subscription,
 };
 use crate::store::{AeStore, ContainerStore, CinStore, SubStore};
 
@@ -23,6 +24,7 @@ pub fn create_router(
                 .route("/:ae", post(register_container).get(get_containers))
                 .route("/:ae/:cnt", post(register_cin))
                 .route("/:ae/:cnt/la", get(get_latest_cin))
+                .route("/:ae/:cnt/sub", post(register_subscription))
                 .with_state(state),
         )
 }

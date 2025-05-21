@@ -12,18 +12,26 @@ pub async fn notify_subscribers(
 
     let body = json!({
         "m2m:sgn": {
+            "sur": format!("/csebase/{}/{}", ae_id, cnt_id),
             "nev": {
                 "rep": {
                     "m2m:cin": cin
-                }
+                },
+                "net": [3]
             }
         }
     });
 
     for url in endpoints {
-        let _ = client.post(url)
-            .json(&body)
-            .send()
-            .await;
+        let url = url.clone();
+        let body = body.clone();
+        let client = client.clone();
+
+        tokio::spawn(async move {
+            match client.post(&url).json(&body).send().await {
+                Ok(res) => println!("✅ Notified {} ({})", url, res.status()),
+                Err(err) => println!("❌ Failed to notify {}: {:?}", url, err),
+            }
+        });
     }
 }
