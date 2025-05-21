@@ -1,5 +1,5 @@
 use axum::{extract::{Path, State}, Json, http::StatusCode, response::{IntoResponse, Response}};
-use crate::{model::{M2mContainer}, store::{AeStore, ContainerStore, CinStore}};
+use crate::{model::{M2mContainer}, store::{AeStore, ContainerStore, CinStore, SubStore}};
 
 fn internal_error<E>(msg: &'static str, _err: E) -> Response
 where
@@ -10,7 +10,7 @@ where
 
 pub async fn register_container(
     Path(ae_id): Path<String>,
-    State((ae_store, container_store, _)): State<(AeStore, ContainerStore, CinStore)>,
+    State((ae_store, container_store, _cin_store, _sub_store)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
     Json(payload): Json<M2mContainer>,
 ) -> Result<Response, Response> {
     let db = ae_store.lock().map_err(|e| internal_error("🔒 Failed to lock AE store", e))?;
@@ -32,7 +32,7 @@ pub async fn register_container(
 
 pub async fn get_containers(
     Path(ae_id): Path<String>,
-    State((ae_store, container_store, _)): State<(AeStore, ContainerStore, CinStore)>,
+    State((ae_store, container_store, _cin_store, _sub_store)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
 ) -> Result<Response, Response> {
     let db = ae_store.lock().map_err(|e| internal_error("🔒 Failed to lock AE store", e))?;
     if !db.iter().any(|ae| ae.rn == ae_id) {

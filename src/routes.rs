@@ -4,14 +4,15 @@ use crate::handlers::{
     container::{get_containers, register_container},
     content_instance::{register_cin, get_latest_cin},
 };
-use crate::store::{AeStore, ContainerStore, CinStore};
+use crate::store::{AeStore, ContainerStore, CinStore, SubStore};
 
 pub fn create_router(
     ae_store: AeStore,
     container_store: ContainerStore,
     cin_store: CinStore,
+    sub_store: SubStore,
 ) -> Router {
-    let state = (ae_store.clone(), container_store.clone(), cin_store.clone());
+    let state = (ae_store.clone(), container_store.clone(), cin_store.clone(), sub_store.clone());
 
     Router::new()
         .route("/csebase", post(register_ae).get(discover_ae))

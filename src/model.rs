@@ -34,3 +34,9 @@ pub struct M2mContentInstance {
     #[serde(rename = "m2m:cin")]
     pub cin: ContentInstance,
 }
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct Subscription {
+    pub rn: String,
+    pub nu: Vec<String>,
+}
