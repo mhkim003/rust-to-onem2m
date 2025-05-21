@@ -8,7 +8,7 @@ pub async fn notify_subscribers(
     cin: &ContentInstance,
     endpoints: &[String],
 ) {
-    let Client = Client::new();
+    let client = Client::new();
 
     let body = json!({
         "m2m:sgn": {
@@ -21,7 +21,7 @@ pub async fn notify_subscribers(
     });
 
     for url in endpoints {
-        let _ = Client.post(url)
+        let _ = client.post(url)
             .json(&body)
             .send()
             .await;

@@ -15,7 +15,7 @@ where
 }
 
 pub async fn register_ae(
-    State((ae_store, _, _, _)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
+    State((ae_store, _container_store, _cin_store, _sub_store)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
     Json(payload): Json<M2mAe>,
 ) -> Result<Response, Response> {
     let mut db = ae_store.lock().map_err(|e| internal_error("🔒 Failed to lock AE store", e))?;
@@ -25,7 +25,7 @@ pub async fn register_ae(
 }
 
 pub async fn discover_ae(
-    State((ae_store, _, _, _)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
+    State((ae_store, _container_store, _cin_store, _sub_store)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
     Query(query): Query<DiscoveryFilter>,
 ) -> Result<Response, Response> {
     let db = ae_store.lock().map_err(|e| internal_error("🔒 Failed to lock AE store", e))?;

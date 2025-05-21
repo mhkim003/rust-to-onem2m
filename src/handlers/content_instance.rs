@@ -55,7 +55,7 @@ pub async fn register_cin(
 
 pub async fn get_latest_cin(
     Path((ae_id, cnt_id)): Path<(String, String)>,
-    State((_ae_store, _container_store, cin_store, _SubStore)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
+    State((_ae_store, _container_store, cin_store, _sub_store)): State<(AeStore, ContainerStore, CinStore, SubStore)>,
 ) -> Result<Response, Response> {
     let cin_map = cin_store.lock().map_err(|e| internal_error("CIN store lock failed", e))?;
     if let Some(list) = cin_map.get(&(ae_id.clone(), cnt_id.clone())) {
