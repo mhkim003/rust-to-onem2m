@@ -1,7 +1,8 @@
 use axum::{Router, routing::{post, get}};
 use crate::handlers::{
     ae::{discover_ae, register_ae},
-    container::{get_containers, register_container}, content_instance::{register_cin, get_latest_cin},
+    container::{get_containers, register_container},
+    content_instance::{register_cin, get_latest_cin},
 };
 use crate::store::{AeStore, ContainerStore, CinStore};
 
