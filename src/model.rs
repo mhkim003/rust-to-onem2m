@@ -35,6 +35,12 @@ pub struct M2mContentInstance {
     pub cin: ContentInstance,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+pub struct M2mSubscription {
+    #[serde(rename = "m2m:sub")]
+    pub sub: Subscription,
+}
+
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Subscription {
     pub rn: String,
