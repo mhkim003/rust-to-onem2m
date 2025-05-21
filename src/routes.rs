@@ -1,15 +1,16 @@
-use axum::{Router, routing::{post}};
+use axum::{Router, routing::{post, get}};
 use crate::handlers::{
-    ae::{register_ae, discover_ae},
-    container::{register_container, get_containers},
+    ae::{discover_ae, register_ae},
+    container::{get_containers, register_container}, content_instance::{register_cin, get_latest_cin},
 };
-use crate::store::{AeStore, ContainerStore};
+use crate::store::{AeStore, ContainerStore, CinStore};
 
 pub fn create_router(
     ae_store: AeStore,
     container_store: ContainerStore,
+    cin_store: CinStore,
 ) -> Router {
-    let state = (ae_store.clone(), container_store.clone());
+    let state = (ae_store.clone(), container_store.clone(), cin_store.clone());
 
     Router::new()
         .route("/csebase", post(register_ae).get(discover_ae))
@@ -18,6 +19,8 @@ pub fn create_router(
             "/csebase",
             Router::new()
                 .route("/:ae", post(register_container).get(get_containers))
+                .route("/:ae/:cnt", post(register_cin))
+                .route("/:ae/:cnt/la", get(get_latest_cin))
                 .with_state(state),
         )
 }

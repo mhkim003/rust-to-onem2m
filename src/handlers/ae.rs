@@ -1,5 +1,5 @@
 use axum::{extract::{Query, State}, Json, http::StatusCode, response::{IntoResponse, Response}};
-use crate::{model::{Ae, M2mAe}, store::{AeStore, ContainerStore}};
+use crate::{model::{Ae, M2mAe}, store::{AeStore, ContainerStore, CinStore}};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -15,7 +15,7 @@ where
 }
 
 pub async fn register_ae(
-    State((ae_store, _)): State<(AeStore, ContainerStore)>,
+    State((ae_store, _, _)): State<(AeStore, ContainerStore, CinStore)>,
     Json(payload): Json<M2mAe>,
 ) -> Result<Response, Response> {
     let mut db = ae_store.lock().map_err(|e| internal_error("🔒 Failed to lock AE store", e))?;
@@ -25,7 +25,7 @@ pub async fn register_ae(
 }
 
 pub async fn discover_ae(
-    State((ae_store, _)): State<(AeStore, ContainerStore)>,
+    State((ae_store, _, _)): State<(AeStore, ContainerStore, CinStore)>,
     Query(query): Query<DiscoveryFilter>,
 ) -> Result<Response, Response> {
     let db = ae_store.lock().map_err(|e| internal_error("🔒 Failed to lock AE store", e))?;
